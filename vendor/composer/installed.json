@@ -1,0 +1,147 @@
+{
+    "packages": [
+        {
+            "name": "agungsugiarto/codeigniter4-cors",
+            "version": "v1.1.0",
+            "version_normalized": "1.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/agungsugiarto/codeigniter4-cors.git",
+                "reference": "75d136b1e2349e76fc3641e024714a77e2fbf07d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/agungsugiarto/codeigniter4-cors/zipball/75d136b1e2349e76fc3641e024714a77e2fbf07d",
+                "reference": "75d136b1e2349e76fc3641e024714a77e2fbf07d",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "codeigniter4/framework": "^4.0",
+                "phpunit/phpunit": "^8.5"
+            },
+            "time": "2020-09-21T04:39:19+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Fluent\\Cors\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Agung Sugiarto",
+                    "email": "me.agungsugiarto@tgmail.com",
+                    "homepage": "https://agungsugiarto.github.io",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Send CORS Headers in a CodeIgniter 4 application.",
+            "keywords": [
+                "ajax",
+                "api",
+                "codeigniter4",
+                "codeigniter4-cors",
+                "cors",
+                "request"
+            ],
+            "support": {
+                "issues": "https://github.com/agungsugiarto/codeigniter4-cors/issues",
+                "source": "https://github.com/agungsugiarto/codeigniter4-cors/tree/v1.1.0"
+            },
+            "install-path": "../agungsugiarto/codeigniter4-cors"
+        },
+        {
+            "name": "myth/auth",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lonnieezell/myth-auth.git",
+                "reference": "c62802b9e2ce5be931f15270811d831cc2e85457"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lonnieezell/myth-auth/zipball/c62802b9e2ce5be931f15270811d831cc2e85457",
+                "reference": "c62802b9e2ce5be931f15270811d831cc2e85457",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3 || ^8.0"
+            },
+            "provide": {
+                "codeigniter4/authentication-implementation": "1.0"
+            },
+            "require-dev": {
+                "codeigniter4/codeigniter4": "dev-develop",
+                "codeigniter4/codeigniter4-standard": "^1.0",
+                "fakerphp/faker": "^1.9",
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "mockery/mockery": "^1.0",
+                "nexusphp/cs-config": "^3.1",
+                "nexusphp/tachycardia": "^1.0",
+                "php-coveralls/php-coveralls": "^2.4",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.2"
+            },
+            "time": "2021-07-02T13:07:46+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Myth\\Auth\\": "src"
+                },
+                "exclude-from-classmap": [
+                    "**/Database/Migrations/**"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lonnie Ezell",
+                    "email": "lonnieje@gmail.com",
+                    "homepage": "http://newmythmedia.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Flexible authentication/authorization system for CodeIgniter 4.",
+            "homepage": "https://github.com/lonnieezell/myth-auth",
+            "keywords": [
+                "Authentication",
+                "authorization",
+                "codeigniter"
+            ],
+            "support": {
+                "issues": "https://github.com/lonnieezell/myth-auth/issues",
+                "source": "https://github.com/lonnieezell/myth-auth/tree/v1.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/lonnieezell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/lonnieezell",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../myth/auth"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
