@@ -34,7 +34,7 @@ $routes->setAutoRoute(true);
 // $routes->get('/', 'Home::index');
 
 $routes->group('api', ['filter' => 'cors'], function ($routes) {
-	$routes->resource('produk');
+	$routes->resource('user', ['namespace' => 'App\Controllers\Api']);
 });
 
 /**
