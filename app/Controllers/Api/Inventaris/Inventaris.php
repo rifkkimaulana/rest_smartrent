@@ -5,10 +5,58 @@ namespace App\Controllers\Api\Inventaris;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\InventarisModel;
+use App\Models\KategoriModel;
 
 class Inventaris extends ResourceController
 {
     use ResponseTrait;
+
+    public function limit_produk()
+    {
+        $limit = $this->request->getPost('limit');
+        $start = $this->request->getPost('start');
+        $search = $this->request->getPost('search');
+        $kategori = $this->request->getPost('kategori');
+
+        if (!empty($kategori)) {
+            $kategoriModel = new KategoriModel();
+            $kategoriNama = $kategoriModel->where('id', $kategori)->first();
+            $namaKategori = $kategoriNama['nama'];
+        } else {
+            $namaKategori = '';
+        }
+
+        $produkModel = new InventarisModel();
+        $produk = $produkModel->fetch_data($limit, $start, $search, $namaKategori);
+
+        $rowCount = $produkModel->countAllResults();
+
+        if ($rowCount == 0 && $start == 0) {
+            $result = 0;
+        } else {
+            $result = 1;
+        }
+
+        if ($rowCount > 0) {
+            return $this->respond(
+                [
+                    'status' => TRUE,
+                    'data' => $produk->getResult(),
+                    'result' => $result,
+                ],
+                200
+            );
+        } else {
+            return $this->respond(
+                [
+                    'status' => FALSE,
+                    'message' => 'Barang tidak ditemukan',
+                    'result' => $result,
+                ],
+                200
+            );
+        }
+    }
 
     public function index()
     {

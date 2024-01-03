@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use App\Models\KategoriModel;
 use CodeIgniter\RESTful\ResourceController;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\InventarisModel;
+use App\Models\ProdukModel;
 
 class Produk extends ResourceController
 {
@@ -13,9 +14,6 @@ class Produk extends ResourceController
 
     public function limit_produk()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: POST");
-        header('Content-Type: application/json');
 
         $limit = $this->request->getPost('limit');
         $start = $this->request->getPost('start');
@@ -30,7 +28,7 @@ class Produk extends ResourceController
             $namaKategori = '';
         }
 
-        $data = new InventarisModel();
+        $data = new ProdukModel();
         $produk = $data->fetch_data($limit, $start, $search, $namaKategori);
 
         $rowCount = $data->countAllResults();

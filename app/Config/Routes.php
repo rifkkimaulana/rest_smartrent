@@ -40,6 +40,9 @@ $routes->group('api', ['filter' => 'cors'], function ($routes) {
 	$routes->resource('users', ['namespace' => 'App\Controllers\Api']);
 	$routes->resource('riwayat', ['namespace' => 'App\Controllers\Api']);
 
+	// UI User
+	$routes->resource('produk', ['namespace' => 'App\Controllers\Api']);
+
 	// Pengaturan Segment
 	$routes->resource('daftar_bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
 	$routes->resource('bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
