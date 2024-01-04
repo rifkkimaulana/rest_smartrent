@@ -10,6 +10,36 @@ class Users extends ResourceController
 {
     use ResponseTrait;
 
+    public function login()
+    {
+
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
+
+
+        $UsersModel = new UsersModel();
+        $user = $UsersModel->where('username', $username)->first();
+
+        if (password_verify($password, $user['password'])) {
+            $data = [
+                'status' => 200,
+                'data' => $user
+            ];
+        } else {
+            $data = [
+                'status' => 401,
+                'data' => [
+                    'messages' => 'Password or Username yang anda masukan salah.'
+                ]
+            ];
+        }
+        return $this->respond($data);
+    }
+
     public function index()
     {
         $UsersModel = new UsersModel();
@@ -33,46 +63,90 @@ class Users extends ResourceController
 
     public function create()
     {
-        $UsersModel = new UsersModel();
-
+        $id = $this->request->getPost('id');
         $password = $this->request->getPost('password');
         $re_password = $this->request->getPost('re_password');
 
         if ($password === $re_password) {
+            if (!empty($_FILES['gambar']['tmp_name'])) {
+                $errors = array();
+                $allowed_ext = array('jpg', 'jpeg', 'png',);
+                $file_size = $_FILES['gambar']['size'];
+                $file_tmp = $_FILES['gambar']['tmp_name'];
+                //$type = pathinfo($file_tmp, PATHINFO_EXTENSION);
+                $type = 'jpeg';
+                $data = file_get_contents($file_tmp);
+                $tmp = explode('.', $_FILES['gambar']['name']);
+                $file_ext = end($tmp);
 
-            /*
-            $file = $this->request->getFile('gambar');
-            if ($file->isValid() && !$file->hasMoved()) {
+                if (in_array($file_ext, $allowed_ext) === false) {
+                    $errors[] = 'Ekstensi file tidak di izinkan';
+                    echo json_encode(['status' => false, 'message' => 'Ekstensi file tidak di izinkan']);
+                    die();
+                }
 
-                $newName = $file->getRandomName();
-                $file->move('image/gambar/', $newName);
-            }
-            */
+                if ($file_size > 2097152) {
+                    $errors[] = 'Ukuran file maksimal 2 MB';
+                    echo json_encode(['status' => false, 'message' => 'Ukuran file maksimal 2 MB']);
+                    die();
+                }
 
-            $data = [
-                'nama_lengkap' => $this->request->getVar('nama_lengkap'),
-                'username' => $this->request->getVar('username'),
-                'password' => password_hash($password, PASSWORD_DEFAULT),
-                'alamat_email' => $this->request->getVar('email'),
-                'telpon' => $this->request->getVar('telpon'),
-                'user_level' => $this->request->getVar('user_level'),
-                //'gambar' => $newName,
-            ];
-
-            if ($UsersModel->insert($data)) {
-                $data = [
-                    'status'   => 201,
-                    'data' => [
-                        'messages' => 'Pengguna Berhasil ditambahkan!'
-                    ]
-                ];
+                if (empty($errors)) {
+                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                    $data = [
+                        'nama_lengkap' => $this->request->getVar('nama_lengkap'),
+                        'username' => $this->request->getVar('username'),
+                        'password' => password_hash($password, PASSWORD_DEFAULT),
+                        'alamat_email' => $this->request->getVar('email'),
+                        'telpon' => $this->request->getVar('telpon'),
+                        'user_level' => $this->request->getVar('user_level'),
+                        'gambar' => $base64
+                    ];
+                }
             } else {
                 $data = [
-                    'status'   => 400,
-                    'data' => [
-                        'messages' => 'User Gagal ditambahkan!'
-                    ]
+                    'nama_lengkap' => $this->request->getVar('nama_lengkap'),
+                    'username' => $this->request->getVar('username'),
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
+                    'alamat_email' => $this->request->getVar('email'),
+                    'telpon' => $this->request->getVar('telpon'),
+                    'user_level' => $this->request->getVar('user_level'),
                 ];
+            }
+
+            $UsersModel = new UsersModel();
+            if (!empty($id)) {
+                if ($UsersModel->update($id, $data)) {
+                    $data = [
+                        'status'   => 201,
+                        'data' => [
+                            'messages' => 'Pengguna Berhasil diubah!'
+                        ]
+                    ];
+                } else {
+                    $data = [
+                        'status'   => 500,
+                        'data' => [
+                            'messages' => 'User Gagal diubah!'
+                        ]
+                    ];
+                }
+            } else {
+                if ($UsersModel->insertData($data)) {
+                    $data = [
+                        'status'   => 201,
+                        'data' => [
+                            'messages' => 'Pengguna Berhasil ditambahkan!'
+                        ]
+                    ];
+                } else {
+                    $data = [
+                        'status'   => 400,
+                        'data' => [
+                            'messages' => 'User Gagal ditambahkan!'
+                        ]
+                    ];
+                }
             }
         } else {
             $data = [
@@ -84,72 +158,6 @@ class Users extends ResourceController
         }
         return $this->respond($data);
     }
-
-    public function update($id = null)
-    {
-        $UsersModel = new UsersModel();
-
-        $password = $this->request->getPost('password');
-        $re_password = $this->request->getPost('re_password');
-
-        if ($password === $re_password) {
-
-            /*
-            $file = $this->request->getFile('gambar');
-            if ($file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-                $file->move('image/gambar/', $newName);
-            }
-            */
-            if (!empty($password)) {
-                $data = [
-                    'nama_lengkap' => $this->request->getVar('nama_lengkap'),
-                    'username' => $this->request->getVar('username'),
-                    'password' => password_hash($password, PASSWORD_DEFAULT),
-                    'alamat_email' => $this->request->getVar('email'),
-                    'telpon' => $this->request->getVar('telpon'),
-                    'user_level' => $this->request->getVar('user_level'),
-                    //'gambar' => $newName,
-                ];
-            } else {
-                $data = [
-                    'nama_lengkap' => $this->request->getVar('nama_lengkap'),
-                    'username' => $this->request->getVar('username'),
-                    'alamat_email' => $this->request->getVar('email'),
-                    'telpon' => $this->request->getVar('telpon'),
-                    'user_level' => $this->request->getVar('user_level'),
-                    //'gambar' => $newName,
-                ];
-            }
-
-            if ($UsersModel->update($id, $data)) {
-                $data = [
-                    'status'   => 201,
-                    'data' => [
-                        'messages' => 'Pengguna Berhasil diubah!'
-                    ]
-                ];
-            } else {
-                $data = [
-                    'status'   => 500,
-                    'data' => [
-                        'messages' => 'User Gagal diubah!'
-                    ]
-                ];
-            }
-        } else {
-            // Jika password kosong
-            $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Kolom password berbeda atau kosong!'
-                ]
-            ];
-        }
-
-        return $this->respond($data);
-    }
-
 
     public function show($id = null)
     {
@@ -174,11 +182,16 @@ class Users extends ResourceController
 
     public function delete($id = null)
     {
+
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: DELETE");
+        header('Content-Type: application/json');
+
         $UsersModel = new UsersModel();
         $data = $UsersModel->where('id', $id)->first();
 
         if ($data) {
-            if ($UsersModel->delete($id)) {
+            if ($UsersModel->deleteId($id)) {
                 $data = [
                     'status'   => 204,
                     'success' => [
