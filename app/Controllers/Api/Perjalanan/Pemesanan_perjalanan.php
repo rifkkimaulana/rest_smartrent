@@ -33,6 +33,10 @@ class Pemesanan_perjalanan extends ResourceController
 
     public function create()
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
         $id = $this->request->getVar('id');
         $PemesananPerjalananModel = new PemesananPerjalananModel();
 
@@ -42,7 +46,7 @@ class Pemesanan_perjalanan extends ResourceController
             'paket_id' =>  $this->request->getVar('paket_id'),
             'jumlah_peserta' =>  $this->request->getVar('jumlah_peserta'),
             'total_pembayaran' =>  $this->request->getVar('total_pembayaran'),
-            'tanggal_pemesanan' =>  $this->request->getVar('tanggal_pemesanan'),
+            'tanggal_pemesanan' =>  date("Y-m-d H:i:s"),
             'status_pembayaran' =>  $this->request->getVar('status_pembayaran'),
         ];
 
