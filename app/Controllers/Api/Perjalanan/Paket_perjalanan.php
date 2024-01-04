@@ -33,75 +33,99 @@ class Paket_perjalanan extends ResourceController
 
     public function create()
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
+        $id = $this->request->getVar('id');
         $PaketPerjalananModel = new PaketPerjalananModel();
 
-        function generateUniqueString()
-        {
-            $uniqueString = substr(uniqid(), -5);
-            return $uniqueString;
-        }
-        $data = [
-            'kategori_id' =>  $this->request->getVar('nama_Paket'),
-            'nama_paket' =>  $this->request->getVar('nama_Paket'),
-            'deskripsi' =>  $this->request->getVar('nama_Paket'),
-            'harga_paket' =>  $this->request->getVar('nama_Paket'),
-            'kuota_peserta' =>  $this->request->getVar('nama_Paket'),
-            'gambar_paket' =>  $this->request->getVar('nama_Paket'),
-        ];
+        if (!empty($_FILES['gambar']['tmp_name'])) {
+            $errors = array();
+            $allowed_ext = array('jpg', 'jpeg', 'png',);
+            $file_size = $_FILES['gambar']['size'];
+            $file_tmp = $_FILES['gambar']['tmp_name'];
+            //$type = pathinfo($file_tmp, PATHINFO_EXTENSION);
+            $type = 'jpeg';
+            $data = file_get_contents($file_tmp);
+            $tmp = explode('.', $_FILES['gambar']['name']);
+            $file_ext = end($tmp);
 
-        if ($PaketPerjalananModel->insert($data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Paket Berhasil ditambahkan!'
-                ]
-            ];
+            if (in_array($file_ext, $allowed_ext) === false) {
+                $errors[] = 'Ekstensi file tidak di izinkan';
+                echo json_encode(['status' => false, 'message' => 'Ekstensi file tidak di izinkan']);
+                die();
+            }
+
+            if ($file_size > 2097152) {
+                $errors[] = 'Ukuran file maksimal 2 MB';
+                echo json_encode(['status' => false, 'message' => 'Ukuran file maksimal 2 MB']);
+                die();
+            }
+
+            if (empty($errors)) {
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $data = [
+                    'kategori_id' =>  $this->request->getVar('kategori_id'),
+                    'nama_paket' =>  $this->request->getVar('nama_paket'),
+                    'deskripsi' =>  $this->request->getVar('deskripsi'),
+                    'harga_paket' =>  $this->request->getVar('harga_paket'),
+                    'kuota_peserta' =>  $this->request->getVar('kuota_peserta'),
+                    'gambar_paket' =>  $base64
+                ];
+            }
         } else {
             $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Paket Gagal ditambahkan!'
-                ]
+                'kategori_id' =>  $this->request->getVar('kategori_id'),
+                'nama_paket' =>  $this->request->getVar('nama_paket'),
+                'deskripsi' =>  $this->request->getVar('deskripsi'),
+                'harga_paket' =>  $this->request->getVar('harga_paket'),
+                'kuota_peserta' =>  $this->request->getVar('kuota_peserta'),
             ];
         }
 
-        return $this->respond($data);
-    }
 
-    public function update($id = null)
-    {
-        $PaketPerjalananModel = new PaketPerjalananModel();
-
-        $data = [
-            'kategori_id' =>  $this->request->getVar('nama_Paket'),
-            'nama_paket' =>  $this->request->getVar('nama_Paket'),
-            'deskripsi' =>  $this->request->getVar('nama_Paket'),
-            'harga_paket' =>  $this->request->getVar('nama_Paket'),
-            'kuota_peserta' =>  $this->request->getVar('nama_Paket'),
-            'gambar_paket' =>  $this->request->getVar('nama_Paket'),
-        ];
-
-        if ($PaketPerjalananModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Paket Berhasil diubah!'
-                ]
-            ];
+        if (empty($id)) {
+            if ($PaketPerjalananModel->insert($data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Paket Berhasil ditambahkan!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 400,
+                    'data' => [
+                        'messages' => 'Paket Gagal ditambahkan!'
+                    ]
+                ];
+            }
         } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Paket Gagal diubah!'
-                ]
-            ];
+            if ($PaketPerjalananModel->update($id, $data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Paket Berhasil diubah!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 500,
+                    'data' => [
+                        'messages' => 'Paket Gagal diubah!'
+                    ]
+                ];
+            }
         }
         return $this->respond($data);
     }
-
 
     public function show($id = null)
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
         $PaketPerjalananModel = new PaketPerjalananModel();
         $data = $PaketPerjalananModel->where('id', $id)->first();
         if ($data) {
@@ -123,6 +147,10 @@ class Paket_perjalanan extends ResourceController
 
     public function delete($id = null)
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST');
+        header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+
         $PaketPerjalananModel = new PaketPerjalananModel();
         $data = $PaketPerjalananModel->where('id', $id)->first();
 

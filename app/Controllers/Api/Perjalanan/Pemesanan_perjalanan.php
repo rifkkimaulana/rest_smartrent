@@ -33,72 +33,54 @@ class Pemesanan_perjalanan extends ResourceController
 
     public function create()
     {
-        $PemesananPerjalananModel = new PemesananPerjalananModel();
-
-        function generateUniqueString()
-        {
-            $uniqueString = substr(uniqid(), -5);
-            return $uniqueString;
-        }
-        $data = [
-            'kategori_id' =>  $this->request->getVar('nama_Perjalanan'),
-            'nama_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
-            'deskripsi' =>  $this->request->getVar('nama_Perjalanan'),
-            'harga_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
-            'kuota_peserta' =>  $this->request->getVar('nama_Perjalanan'),
-            'gambar_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
-        ];
-
-        if ($PemesananPerjalananModel->insert($data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Perjalanan Berhasil ditambahkan!'
-                ]
-            ];
-        } else {
-            $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Perjalanan Gagal ditambahkan!'
-                ]
-            ];
-        }
-
-        return $this->respond($data);
-    }
-
-    public function update($id = null)
-    {
+        $id = $this->request->getVar('id');
         $PemesananPerjalananModel = new PemesananPerjalananModel();
 
         $data = [
-            'kategori_id' =>  $this->request->getVar('nama_Perjalanan'),
-            'nama_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
-            'deskripsi' =>  $this->request->getVar('nama_Perjalanan'),
-            'harga_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
-            'kuota_peserta' =>  $this->request->getVar('nama_Perjalanan'),
-            'gambar_Perjalanan' =>  $this->request->getVar('nama_Perjalanan'),
+            'no_transaksi' =>  substr(uniqid(), -5),
+            'user_id' =>  $this->request->getVar('user_id'),
+            'paket_id' =>  $this->request->getVar('paket_id'),
+            'jumlah_peserta' =>  $this->request->getVar('jumlah_peserta'),
+            'total_pembayaran' =>  $this->request->getVar('total_pembayaran'),
+            'tanggal_pemesanan' =>  $this->request->getVar('tanggal_pemesanan'),
+            'status_pembayaran' =>  $this->request->getVar('status_pembayaran'),
         ];
 
-        if ($PemesananPerjalananModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Perjalanan Berhasil diubah!'
-                ]
-            ];
+        if (empty($id)) {
+            if ($PemesananPerjalananModel->insert($data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Perjalanan Berhasil ditambahkan!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 400,
+                    'data' => [
+                        'messages' => 'Perjalanan Gagal ditambahkan!'
+                    ]
+                ];
+            }
         } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Perjalanan Gagal diubah!'
-                ]
-            ];
+            if ($PemesananPerjalananModel->update($id, $data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Perjalanan Berhasil diubah!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 500,
+                    'data' => [
+                        'messages' => 'Perjalanan Gagal diubah!'
+                    ]
+                ];
+            }
         }
         return $this->respond($data);
     }
-
 
     public function show($id = null)
     {
