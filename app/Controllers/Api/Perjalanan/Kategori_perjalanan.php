@@ -34,71 +34,55 @@ class Kategori_perjalanan extends ResourceController
     public function create()
     {
         $KategoriPerjalananModel = new KategoriPerjalananModel();
+        $id = $this->request->getVar('id');
 
-        function generateUniqueString()
-        {
-            $uniqueString = substr(uniqid(), -5);
-            return $uniqueString;
-        }
 
         $data = [
             'nama_kategori' =>  $this->request->getVar('nama_kategori'),
 
         ];
 
-        if ($KategoriPerjalananModel->insert($data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Kategori Berhasil ditambahkan!'
-                ]
-            ];
+        if (empty($id)) {
+            if ($KategoriPerjalananModel->insert($data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Kategori Berhasil ditambahkan!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 400,
+                    'data' => [
+                        'messages' => 'Kategori Gagal ditambahkan!'
+                    ]
+                ];
+            }
         } else {
-            $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Kategori Gagal ditambahkan!'
-                ]
-            ];
-        }
-
-        return $this->respond($data);
-    }
-
-    public function update($id = null)
-    {
-        $KategoriPerjalananModel = new KategoriPerjalananModel();
-
-        $data = [
-            'nama_kategori' =>  $this->request->getVar('nama_kategori'),
-
-        ];
-
-        if ($KategoriPerjalananModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Kategori Berhasil diubah!'
-                ]
-            ];
-        } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Kategori Gagal diubah!'
-                ]
-            ];
+            if ($KategoriPerjalananModel->update($id, $data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Kategori Berhasil diubah!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 500,
+                    'data' => [
+                        'messages' => 'Kategori Gagal diubah!'
+                    ]
+                ];
+            }
         }
         return $this->respond($data);
     }
-
 
     public function show($id = null)
     {
         $KategoriPerjalananModel = new KategoriPerjalananModel();
         $data = $KategoriPerjalananModel->where('id', $id)->first();
         if ($data) {
-
             $data = [
                 'status' => 200,
                 'data' => [$data]
