@@ -67,40 +67,8 @@ class Pembayaran extends ResourceController
                 ]
             ];
         }
-
         return $this->respond($data);
     }
-
-    public function update($id = null)
-    {
-        $TransaksiDuitkuModel = new TransaksiDuitkuModel();
-
-        $data = [
-            'user_id' => $this->request->getVar('user_id'),
-            'tanggal_penyewaan' => $this->request->getVar('tanggal_penyewaan'),
-            'tanggal_pengembalian' => $this->request->getVar('tanggal_pengembalian'),
-            'total_harga' => $this->request->getVar('total_harga'),
-            'status_Pembayaran' => $this->request->getVar('status_Pembayaran'),
-        ];
-
-        if ($TransaksiDuitkuModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Pembayaran Berhasil diubah!'
-                ]
-            ];
-        } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Pembayaran Gagal diubah!'
-                ]
-            ];
-        }
-        return $this->respond($data);
-    }
-
 
     public function show($id = null)
     {
