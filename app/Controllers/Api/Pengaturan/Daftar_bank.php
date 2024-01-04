@@ -33,58 +33,81 @@ class Daftar_bank extends ResourceController
 
     public function create()
     {
+        $id = $this->request->getVar('id');
         $DaftarBankModel = new DaftarBankModel();
 
-        $data = [
-            'nama_bank' => $this->request->getVar('user_id'),
-            'logo_bank' => $this->request->getVar('daftar_bank_id'),
-        ];
+        if (!empty($_FILES['gambar']['tmp_name'])) {
+            $errors = array();
+            $allowed_ext = array('jpg', 'jpeg', 'png',);
+            $file_size = $_FILES['gambar']['size'];
+            $file_tmp = $_FILES['gambar']['tmp_name'];
+            //$type = pathinfo($file_tmp, PATHINFO_EXTENSION);
+            $type = 'jpeg';
+            $data = file_get_contents($file_tmp);
+            $tmp = explode('.', $_FILES['gambar']['name']);
+            $file_ext = end($tmp);
 
-        if ($DaftarBankModel->insert($data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Bank Berhasil ditambahkan!'
-                ]
-            ];
+            if (in_array($file_ext, $allowed_ext) === false) {
+                $errors[] = 'Ekstensi file tidak di izinkan';
+                echo json_encode(['status' => false, 'message' => 'Ekstensi file tidak di izinkan']);
+                die();
+            }
+
+            if ($file_size > 2097152) {
+                $errors[] = 'Ukuran file maksimal 2 MB';
+                echo json_encode(['status' => false, 'message' => 'Ukuran file maksimal 2 MB']);
+                die();
+            }
+
+            if (empty($errors)) {
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                $data = [
+                    'nama_bank' => $this->request->getVar('nama_bank'),
+                    'logo_bank' => $base64,
+                ];
+            }
         } else {
             $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Bank Gagal ditambahkan!'
-                ]
+                'nama_bank' => $this->request->getVar('nama_bank'),
             ];
         }
 
-        return $this->respond($data);
-    }
-
-    public function update($id = null)
-    {
-        $DaftarBankModel = new DaftarBankModel();
-
-        $data = [
-            'nama_bank' => $this->request->getVar('user_id'),
-            'logo_bank' => $this->request->getVar('daftar_bank_id'),
-        ];
-
-        if ($DaftarBankModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Bank Berhasil diubah!'
-                ]
-            ];
+        if (empty($id)) {
+            if ($DaftarBankModel->insert($data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Bank Berhasil ditambahkan!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 400,
+                    'data' => [
+                        'messages' => 'Bank Gagal ditambahkan!'
+                    ]
+                ];
+            }
         } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Bank Gagal diubah!'
-                ]
-            ];
+            if ($DaftarBankModel->update($id, $data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Bank Berhasil diubah!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 500,
+                    'data' => [
+                        'messages' => 'Bank Gagal diubah!'
+                    ]
+                ];
+            }
         }
         return $this->respond($data);
     }
+
 
 
     public function show($id = null)

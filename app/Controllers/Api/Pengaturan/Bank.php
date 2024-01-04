@@ -33,63 +33,49 @@ class Bank extends ResourceController
 
     public function create()
     {
+        $id = $this->request->getVar('id');
         $BankModel = new BankModel();
 
         $data = [
             'user_id' => $this->request->getVar('user_id'),
             'daftar_bank_id' => $this->request->getVar('daftar_bank_id'),
-            'nama_lengkap' => $this->request->getVar('nama_lengkap'),
             'nomor_rekening' => $this->request->getVar('nomor_rekening'),
         ];
-
-        if ($BankModel->insert($data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Bank Berhasil ditambahkan!'
-                ]
-            ];
+        if (empty($id)) {
+            if ($BankModel->insert($data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Bank Berhasil ditambahkan!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 400,
+                    'data' => [
+                        'messages' => 'Bank Gagal ditambahkan!'
+                    ]
+                ];
+            }
         } else {
-            $data = [
-                'status'   => 400,
-                'data' => [
-                    'messages' => 'Bank Gagal ditambahkan!'
-                ]
-            ];
-        }
-
-        return $this->respond($data);
-    }
-
-    public function update($id = null)
-    {
-        $BankModel = new BankModel();
-
-        $data = [
-            'Bank_id' => $this->request->getVar('Bank_id'),
-            'daftar_bank_id' => $this->request->getVar('daftar_bank_id'),
-            'nama_lengkap' => $this->request->getVar('nama_lengkap'),
-            'nomor_rekening' => $this->request->getVar('nomor_rekening'),
-        ];
-
-        if ($BankModel->update($id, $data)) {
-            $data = [
-                'status'   => 201,
-                'data' => [
-                    'messages' => 'Bank Berhasil diubah!'
-                ]
-            ];
-        } else {
-            $data = [
-                'status'   => 500,
-                'data' => [
-                    'messages' => 'Bank Gagal diubah!'
-                ]
-            ];
+            if ($BankModel->update($id, $data)) {
+                $data = [
+                    'status'   => 201,
+                    'data' => [
+                        'messages' => 'Bank Berhasil diubah!'
+                    ]
+                ];
+            } else {
+                $data = [
+                    'status'   => 500,
+                    'data' => [
+                        'messages' => 'Bank Gagal diubah!'
+                    ]
+                ];
+            }
         }
         return $this->respond($data);
     }
-
 
     public function show($id = null)
     {
