@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class DuitkuPaymentModel extends Model
+class DuitkuModel extends Model
 {
     protected $table = 'tbl_duitku_payment';
     protected $primaryKey = 'id';

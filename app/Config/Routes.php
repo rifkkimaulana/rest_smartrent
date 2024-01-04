@@ -46,6 +46,8 @@ $routes->group('api', ['filter' => 'cors'], function ($routes) {
 	// Pengaturan Segment
 	$routes->resource('daftar_bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
 	$routes->resource('bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+	$routes->resource('wablas', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+	$routes->resource('duitku', ['namespace' => 'App\Controllers\Api\Pengaturan']);
 
 	// Segment Inventaris
 	$routes->resource('inventaris', ['namespace' => 'App\Controllers\Api\Inventaris']);
