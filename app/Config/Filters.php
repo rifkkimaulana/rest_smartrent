@@ -27,7 +27,7 @@ class Filters extends BaseConfig
 			//'honeypot'
 		],
 	];
-
+	/*
 	public $response = [
 		'headers' => [
 			'Access-Control-Allow-Origin' => ['*'],
@@ -35,17 +35,17 @@ class Filters extends BaseConfig
 			'Access-Control-Allow-Headers' =>
 			[
 				'X-Requested-With',
-				// 'Content-Type', 
+				'Content-Type',
 				'Origin',
 				'Authorization',
 				'Accept',
 				'X-API-Key'
 			],
 			'Access-Control-Allow-Credentials' => false,
-			// 'Access-Control-Max-Age' => 86400,
-
+			//'Access-Control-Max-Age' => 86400,
 		],
 	];
+	*/
 
 	// Works on all of a particular HTTP method
 	// (GET, POST, etc) as BEFORE filters only
@@ -60,7 +60,8 @@ class Filters extends BaseConfig
 		// ...
 		'cors' => [
 			'before' => ['api/*'],
-			'after' => ['api/*']
+			'after' => ['
+			/*']
 		],
 		'apiKey' => ['before' => ['api/*']],
 
