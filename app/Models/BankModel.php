@@ -11,7 +11,6 @@ class BankModel extends Model
     protected $allowedFields = [
         'user_id',
         'daftar_bank_id',
-        'nama_lengkap',
         'nomor_rekening'
     ];
 }

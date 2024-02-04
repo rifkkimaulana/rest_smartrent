@@ -38,6 +38,31 @@ $routes->group('api', ['filter' => 'cors'], function ($routes) {
 	$routes->resource('produk', ['namespace' => 'App\Controllers\Api']);
 	$routes->resource('kategori', ['namespace' => 'App\Controllers\Api']);
 	$routes->resource('produk2', ['namespace' => 'App\Controllers\Api']);
+
+	// Dashboard Segment
+	$routes->resource('transaksi', ['namespace' => 'App\Controllers\Api']);
+	$routes->resource('pembayaran', ['namespace' => 'App\Controllers\Api']);
+	$routes->resource('users', ['namespace' => 'App\Controllers\Api']);
+	$routes->resource('riwayat', ['namespace' => 'App\Controllers\Api']);
+
+	// UI User
+	$routes->resource('produk', ['namespace' => 'App\Controllers\Api']);
+
+	// Pengaturan Segment
+	$routes->resource('daftar_bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+	$routes->resource('bank', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+	$routes->resource('wablas', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+	$routes->resource('duitku', ['namespace' => 'App\Controllers\Api\Pengaturan']);
+
+	// Segment Inventaris
+	$routes->resource('inventaris', ['namespace' => 'App\Controllers\Api\Inventaris']);
+	$routes->resource('kategori', ['namespace' => 'App\Controllers\Api\Inventaris']);
+
+	// Segment Perjalanan
+	$routes->resource('destinasi', ['namespace' => 'App\Controllers\Api\Perjalanan']);
+	$routes->resource('kategori_perjalanan', ['namespace' => 'App\Controllers\Api\Perjalanan']);
+	$routes->resource('paket_perjalanan', ['namespace' => 'App\Controllers\Api\Perjalanan']);
+	$routes->resource('pemesanan_perjalanan', ['namespace' => 'App\Controllers\Api\Perjalanan']);
 });
 
 /**
